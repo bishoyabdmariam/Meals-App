@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mealsapp/Screens/HomeScreen.dart';
 import 'Screens/MealsScreen.dart';
 import 'controller/AddToCartController.dart';
 void main() {
@@ -14,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const HomeScreen(),
+      home: const MealListScreen(),
       theme: ThemeData(
         primaryColor: Colors.teal,
         hintColor: Colors.orange,
