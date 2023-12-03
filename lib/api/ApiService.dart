@@ -1,39 +1,47 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/MealModel.dart';
 
 class MealApi {
   final Dio _dio = Dio();
 
-  Future<List<Meal>> fetchMeals(String url) async {
+  Future<List<Meal>> fetchMealsForLetter(String letter) async {
     try {
-      final response = await _dio.get(url);
+      final String apiUrl = 'https://www.themealdb.com/api/json/v1/1/search.php?f=$letter';
+      final response = await _dio.get(apiUrl);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = response.data;
-        final List<dynamic> mealsJson = data['meals'];
 
-        return mealsJson.map((mealJson) => Meal.fromJson(mealJson)).toList();
+        // Check if the 'meals' key is present in the response
+        if (data.containsKey('meals') && data['meals'] != null) {
+          final List<dynamic> mealsJson = data['meals'];
+          return mealsJson.map((mealJson) => Meal.fromJson(mealJson)).toList();
+        } else {
+          // No meals for this letter, return an empty list
+          return [];
+        }
       } else {
-        throw Exception('Failed to load meals');
+        throw Exception('Failed to load meals for letter $letter');
       }
     } catch (e) {
-      throw Exception('Error: $e');
+      // Catch any exception and return an empty list
+      print('Error fetching meals for letter $letter: $e');
+      return [];
     }
   }
-}
 
-void printData() async {
-  const String apiUrl = 'https://www.themealdb.com/api/json/v1/1/search.php?f=a';
+  Future<List<Meal>> fetchMeals() async {
+    List<Meal> allMeals = [];
 
-  final mealApi = MealApi();
+    for (var letterCode = 'a'.codeUnitAt(0); letterCode <= 'z'.codeUnitAt(0); letterCode++) {
+      var letter = String.fromCharCode(letterCode);
 
-  try {
-    List<Meal> meals = await mealApi.fetchMeals(apiUrl);
-    for (var meal in meals) {
-      print('Meal ID: ${meal.idMeal}, Meal Name: ${meal.strMeal}');
+      List<Meal> mealsForLetter = await fetchMealsForLetter(letter);
+      allMeals.addAll(mealsForLetter);
     }
-  } catch (e) {
-    print('Error: $e');
+
+    return allMeals;
   }
 }

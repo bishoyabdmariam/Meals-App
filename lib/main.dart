@@ -30,14 +30,13 @@ class MealListScreen extends StatefulWidget {
 }
 
 class _MealListScreenState extends State<MealListScreen> {
-  final String apiUrl = 'https://www.themealdb.com/api/json/v1/1/search.php?f=a';
   final MealApi mealApi = MealApi();
   late Future<List<Meal>> futureMeals;
 
   @override
   void initState() {
     super.initState();
-    futureMeals = mealApi.fetchMeals(apiUrl);
+    futureMeals = mealApi.fetchMeals();
   }
 
   @override
