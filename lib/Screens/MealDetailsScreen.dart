@@ -27,44 +27,51 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
     return ingredients;
   }
 
-
   @override
   Widget build(BuildContext context) {
     final CartController cartController = Get.find<CartController>();
-    isAdded = cartController.cartItems.contains(widget.meal);
+    isAdded = cartController.cartItems.keys.contains(widget.meal);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.meal.strMeal ?? ''),
         actions: [
-          IconButton(
-            icon: isAdded
-                ? const Icon(Icons.shopping_cart)
-                : const Icon(Icons.shopping_cart_outlined),
-            onPressed: () {
-              if (isAdded) {
-                Get.closeAllSnackbars();
-                cartController.removeFromCart(widget.meal);
-                Get.snackbar(
-                  'Removed From The Cart',
-                  '${widget.meal.strMeal} Removed From your cart.',
-                  backgroundColor: Colors.black54,
-                  colorText: Colors.white,
-                );
-              } else {
-                Get.closeAllSnackbars();
-                cartController.addToCart(widget.meal);
-                Get.snackbar(
-                  'Added to Cart',
-                  '${widget.meal.strMeal} added to your cart.',
-                  backgroundColor: Colors.black54,
-                  colorText: Colors.white,
-                );
-              }
-              setState(() {
-                isAdded = !isAdded;
-              });
-            },
+          Stack(
+            children: [
+              IconButton(
+                icon: const Icon(
+                  Icons.plus_one_outlined,
+                ),
+                onPressed: () {
+                  Get.closeAllSnackbars();
+                  cartController.addToCart(widget.meal);
+                  Get.snackbar(
+                    'Added to Cart',
+                    '${widget.meal.strMeal} added to your cart.',
+                    backgroundColor: Colors.black54,
+                    colorText: Colors.white,
+                  );
+
+                  setState(() {});
+                },
+              ),
+              if (cartController.cartItems.isNotEmpty)
+                Positioned(
+                  right: 5,
+                  top: 5,
+                  child: CircleAvatar(
+                    backgroundColor: Colors.red,
+                    radius: 10,
+                    child: Text(
+                      cartController.cartItems.length.toString(),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
           ),
         ],
       ),
@@ -90,18 +97,26 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                   Text(
                     'Category: ${widget.meal.strCategory ?? ''}',
                     style: const TextStyle(
-                        fontSize: 18.0, fontWeight: FontWeight.bold),
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 8.0),
                   Text(
                     'Area: ${widget.meal.strArea ?? ''}',
-                    style: const TextStyle(fontSize: 16.0),
+                    style: const TextStyle(
+                      fontSize: 16.0,
+                    ),
                   ),
                   const SizedBox(height: 8.0),
                   ElevatedButton(
-                    onPressed:widget.meal.strYoutube==null ? null : () async{
-                      await launchUrl(Uri.parse(widget.meal.strYoutube!) );
-                    },
+                    onPressed: widget.meal.strYoutube == null
+                        ? null
+                        : () async {
+                            await launchUrl(Uri.parse(
+                              widget.meal.strYoutube!,
+                            ));
+                          },
                     child: const Text('Watch Video'),
                   ),
                   const SizedBox(height: 8.0),
@@ -120,8 +135,18 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                   ),
                   const SizedBox(height: 8.0),
                   Text(
-                    'Area Flag: ${widget.meal.strArea ?? ''}', // Add the flag here
-                    style: const TextStyle(fontSize: 16.0),
+                    'Area Flag: ${widget.meal.strArea ?? ''}',
+                    // Add the flag here
+                    style: const TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  Text(
+                    'Number of items in the cart: ${cartController.cartItems.length}',
+                    style: const TextStyle(
+                      fontSize: 16.0,
+                    ),
                   ),
                 ],
               ),
@@ -180,3 +205,12 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
     );
   }
 }
+/*
+  void launchUrl(Uri uri) async {
+    if (await canLaunch(uri.toString())) {
+      await launch(uri.toString());
+    } else {
+      throw 'Could not launch $uri';
+    }
+  }
+}*/

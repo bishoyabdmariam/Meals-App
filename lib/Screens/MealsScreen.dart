@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../api/ApiService.dart';
 import '../models/MealModel.dart';
+import 'CartScreen.dart';
 import 'MealListView.dart';
 
 class MealListScreen extends StatefulWidget {
@@ -26,6 +27,18 @@ class _MealListScreenState extends State<MealListScreen> {
       appBar: AppBar(
         title: const Text("Meals"),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: () {
+              // Navigate to the cart screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CartScreen()),
+              );
+            },
+          ),
+        ],
       ),
       body: Center(
         child: FutureBuilder<List<Meal>>(
