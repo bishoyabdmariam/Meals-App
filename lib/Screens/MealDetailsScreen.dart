@@ -1,8 +1,10 @@
+import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../controller/AddToCartController.dart';
 import '../models/MealModel.dart';
+import 'CartScreen.dart';
 
 class MealDetailsScreen extends StatefulWidget {
   final Meal meal;
@@ -14,6 +16,7 @@ class MealDetailsScreen extends StatefulWidget {
 }
 
 class _MealDetailsScreenState extends State<MealDetailsScreen> {
+  late CartController cartController;
   bool isAdded = false;
 
   List<String> getIngredients() {
@@ -29,7 +32,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final CartController cartController = Get.find<CartController>();
+    cartController = Get.find<CartController>();
     isAdded = cartController.cartItems.keys.contains(widget.meal);
 
     return Scaffold(
@@ -37,6 +40,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
         title: Text(widget.meal.strMeal ?? ''),
         actions: [
           Stack(
+            alignment: Alignment.center,
             children: [
               IconButton(
                 icon: const Icon(
@@ -57,11 +61,11 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
               ),
               if (cartController.cartItems.isNotEmpty)
                 Positioned(
-                  right: 5,
-                  top: 5,
+                  right: 1,
+                  top: 1,
                   child: CircleAvatar(
                     backgroundColor: Colors.red,
-                    radius: 10,
+                    radius: 8,
                     child: Text(
                       cartController.cartItems.length.toString(),
                       style: const TextStyle(
@@ -77,14 +81,18 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
       ),
       body: SingleChildScrollView(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              height: 200.0,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(widget.meal.strMealThumb ?? ''),
-                  fit: BoxFit.cover,
+            AspectRatio(
+              aspectRatio: 16 / 9, // Adjust the aspect ratio as needed
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(widget.meal.strMealThumb ?? ''),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
@@ -102,50 +110,78 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                     ),
                   ),
                   const SizedBox(height: 8.0),
-                  Text(
-                    'Area: ${widget.meal.strArea ?? ''}',
-                    style: const TextStyle(
-                      fontSize: 16.0,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        'Area: ${widget.meal.strArea ?? ''}',
+                        style: const TextStyle(
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      SizedBox(
+                        width: 30,
+                        height: 30,
+                        child: CountryFlag.fromCountryCode(
+                          widget.meal.strArea!.substring(0, 2),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 8.0),
-                  ElevatedButton(
-                    onPressed: widget.meal.strYoutube == null
-                        ? null
-                        : () async {
-                            await launchUrl(Uri.parse(
-                              widget.meal.strYoutube!,
-                            ));
+                  const SizedBox(height: 10.0),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        const SizedBox(width: 10.0),
+                        ElevatedButton(
+                          onPressed: widget.meal.strYoutube == null
+                              ? null
+                              : () async {
+                                  await launchUrl(Uri.parse(
+                                    widget.meal.strYoutube!,
+                                  ));
+                                },
+                          child: const Text('Watch Video'),
+                        ),
+                        const SizedBox(width: 10.0),
+                        ElevatedButton(
+                          onPressed: () {
+                            _showIngredientsDialog(context);
                           },
-                    child: const Text('Watch Video'),
+                          child: Text('Show Ingredients'),
+                        ),
+                        const SizedBox(width: 10.0),
+                        ElevatedButton(
+                          onPressed: () {
+                            _showInstructionsDialog(context);
+                          },
+                          child: Text('Show Instructions'),
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 8.0),
-                  ElevatedButton(
-                    onPressed: () {
-                      _showIngredientsDialog(context);
-                    },
-                    child: const Text('Show Ingredients'),
+                  SizedBox(
+                    height: 20,
                   ),
-                  const SizedBox(height: 8.0),
-                  ElevatedButton(
-                    onPressed: () {
-                      _showInstructionsDialog(context);
-                    },
-                    child: const Text('Show Instructions'),
-                  ),
-                  const SizedBox(height: 8.0),
                   Text(
-                    'Area Flag: ${widget.meal.strArea ?? ''}',
-                    // Add the flag here
-                    style: const TextStyle(
+                    'Number of ${widget.meal.strMeal ?? ''} in the cart: ${cartController.cartItems[widget.meal] ?? 0}',
+                    style: TextStyle(
                       fontSize: 16.0,
                     ),
                   ),
-                  const SizedBox(height: 8.0),
-                  Text(
-                    'Number of items in the cart: ${cartController.cartItems.length}',
-                    style: const TextStyle(
-                      fontSize: 16.0,
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    alignment: Alignment.bottomRight,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Get.to(const CartScreen());
+                      },
+                      child: const Text('Cart Details'),
                     ),
                   ),
                 ],
@@ -162,7 +198,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Ingredients'),
+          title: Text('Ingredients'),
           content: SingleChildScrollView(
             child: ListBody(
               children: getIngredients()
@@ -175,7 +211,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Close'),
+              child: Text('Close'),
             ),
           ],
         );
@@ -188,7 +224,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Instructions'),
+          title: Text('Instructions'),
           content: SingleChildScrollView(
             child: Text(widget.meal.strInstructions ?? ''),
           ),
@@ -197,14 +233,18 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Close'),
+              child: Text('Close'),
             ),
           ],
         );
       },
     );
   }
-}
+
+  void _onCartPressed() {
+    Get.to(() => CartScreen());
+  }
+
 /*
   void launchUrl(Uri uri) async {
     if (await canLaunch(uri.toString())) {
@@ -213,4 +253,6 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
       throw 'Could not launch $uri';
     }
   }
-}*/
+
+*/
+}
