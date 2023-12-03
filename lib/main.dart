@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mealsapp/Screens/MealDetailsScreen.dart';
 
 import 'api/ApiService.dart';
 import 'models/MealModel.dart';
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return MaterialApp(
       home: const MealListScreen(),
       theme: ThemeData(
         primaryColor: Colors.teal, // Change the primary color
@@ -80,10 +81,27 @@ class MealListView extends StatelessWidget {
           margin: const EdgeInsets.all(8.0),
           elevation: 4.0,
           child: ListTile(
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(
+                meal.strMealThumb ?? '',
+              ),
+            ),
             title: Text(
               meal.strMeal ?? '',
-              style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+              style: const TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => MealDetailsScreen(
+                    meal: meal,
+                  ),
+                ),
+              );
+            },
             // You can display more information here if needed
           ),
         );
