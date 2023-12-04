@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mealsapp/Screens/MealsScreen.dart';
+import 'package:mealsapp/api/ApiService.dart';
 
+import '../models/MealModel.dart';
+import 'MealDetailsScreen.dart';
+import 'package:mealsapp/controller/FetchingController.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final FetchingController fetchingController =
+        Get.find<FetchingController>();
+
+    final MealApi mealApi = MealApi();
     return Scaffold(
       backgroundColor: Colors.white54,
       appBar: AppBar(
@@ -27,9 +35,7 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-
-              },
+              onPressed: () {},
               child: const Text('List All Categories'),
             ),
             const SizedBox(height: 20),
@@ -52,12 +58,36 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                // Pick a random meal
-                // Replace the following line with your logic to pick a random meal
-                print('Pick a random meal');
+              onPressed: () async {
+                if (fetchingController.isFetching.value) {
+                  return; // Do nothing if already fetching
+                }
+
+                try {
+                  fetchingController.isFetching.value =
+                      true; // Set fetching state to true
+                  Meal? randomMeal = await mealApi.fetchRandomMeal();
+
+                  if (randomMeal != null) {
+                    Get.to(() => MealDetailsScreen(meal: randomMeal));
+                  } else {
+                    Get.snackbar(
+                      'Error',
+                      'Failed to fetch a random meal. Please try again.',
+                      backgroundColor: Colors.red,
+                      colorText: Colors.white,
+                    );
+                  }
+                } finally {
+                  fetchingController.isFetching.value =
+                      false; // Set fetching state to false regardless of success or failure
+                }
               },
-              child: const Text('Pick a Random Meal'),
+              child: Obx(
+                () => fetchingController.isFetching.value
+                    ? const CircularProgressIndicator() // Show circular progress indicator when fetching
+                    : const Text('Pick a Random Meal'),
+              ),
             ),
           ],
         ),
