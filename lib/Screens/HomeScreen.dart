@@ -25,75 +25,88 @@ class HomeScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                Get.to(const MealListScreen());
-              },
-              child: const Text('All Meals'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                List<CategoryModel> categories =
-                    await mealApi.fetchCategories();
-                Get.to(() => CategoryListScreen(categories: categories));
-              },
-              child: const Text('List All Categories'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to list all areas screen
-                // Replace the following line with your navigation logic
-              },
-              child: const Text('List All Areas'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // Navigate to list all main ingredients screen
-                // Replace the following line with your navigation logic
-              },
-              child: const Text('List All Main Ingredients'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () async {
-                if (fetchingController.isFetching.value) {
-                  return; // Do nothing if already fetching
-                }
+        child: Obx(
+          () => fetchingController.isFetching.value
+              ? const CircularProgressIndicator()
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Get.to(const MealListScreen());
+                      },
+                      child: const Text('All Meals'),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (fetchingController.isFetching.value) {
+                          return; // Do nothing if already fetching
+                        }
 
-                try {
-                  fetchingController.isFetching.value =
-                      true; // Set fetching state to true
-                  Meal? randomMeal = await mealApi.fetchRandomMeal();
+                        try {
+                          fetchingController.isFetching.value =
+                              true; // Set fetching state to true
+                          List<CategoryModel> categories =
+                              await mealApi.fetchCategories();
 
-                  if (randomMeal != null) {
-                    Get.to(() => MealDetailsScreen(meal: randomMeal));
-                  } else {
-                    Get.snackbar(
-                      'Error',
-                      'Failed to fetch a random meal. Please try again.',
-                      backgroundColor: Colors.red,
-                      colorText: Colors.white,
-                    );
-                  }
-                } finally {
-                  fetchingController.isFetching.value =
-                      false; // Set fetching state to false regardless of success or failure
-                }
-              },
-              child: Obx(
-                () => fetchingController.isFetching.value
-                    ? const CircularProgressIndicator() // Show circular progress indicator when fetching
-                    : const Text('Pick a Random Meal'),
-              ),
-            ),
-          ],
+                          Get.to(
+                              () => CategoryListScreen(categories: categories));
+                        } finally {
+                          fetchingController.isFetching.value =
+                              false; // Set fetching state to false regardless of success or failure
+                        }
+                      },
+                      child: const Text('List All Categories'),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Navigate to list all areas screen
+                        // Replace the following line with your navigation logic
+                      },
+                      child: const Text('List All Areas'),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        // Navigate to list all main ingredients screen
+                        // Replace the following line with your navigation logic
+                      },
+                      child: const Text('List All Main Ingredients'),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (fetchingController.isFetching.value) {
+                          return; // Do nothing if already fetching
+                        }
+
+                        try {
+                          fetchingController.isFetching.value =
+                              true; // Set fetching state to true
+                          Meal? randomMeal = await mealApi.fetchRandomMeal();
+
+                          if (randomMeal != null) {
+                            Get.to(() => MealDetailsScreen(meal: randomMeal));
+                          } else {
+                            Get.snackbar(
+                              'Error',
+                              'Failed to fetch a random meal. Please try again.',
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white,
+                            );
+                          }
+                        } finally {
+                          fetchingController.isFetching.value =
+                              false; // Set fetching state to false regardless of success or failure
+                        }
+                      },
+                      child: const Text('Pick a Random Meal'),
+                    ),
+                  ],
+                ),
         ),
       ),
     );

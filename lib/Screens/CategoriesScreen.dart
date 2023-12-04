@@ -29,11 +29,30 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
               itemCount: widget.categories.length,
               itemBuilder: (context, index) {
                 CategoryModel category = widget.categories[index];
-                return ListTile(
-                  title: Text(category.strCategory),
-                  subtitle: Text(category.strCategoryDescription),
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(category.strCategoryThumb),
+                return Card(
+                  elevation: 2, // Adjust the elevation as needed
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: ListTile(
+                    title: Text(
+                      category.strCategory,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    subtitle: Text(
+                      category.strCategoryDescription,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    leading: CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.teal, // You can adjust the color
+                      backgroundImage: NetworkImage(category.strCategoryThumb),
+                    ),
+                    onTap: (){},
                   ),
                 );
               },
