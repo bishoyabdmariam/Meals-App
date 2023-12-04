@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mealsapp/Screens/CategoriesScreen.dart';
 import 'package:mealsapp/Screens/MealsScreen.dart';
 import 'package:mealsapp/api/ApiService.dart';
 
+import '../models/CategoryModel.dart';
 import '../models/MealModel.dart';
 import 'MealDetailsScreen.dart';
 import 'package:mealsapp/controller/FetchingController.dart';
@@ -35,7 +37,11 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () async {
+                List<CategoryModel> categories =
+                    await mealApi.fetchCategories();
+                Get.to(() => CategoryListScreen(categories: categories));
+              },
               child: const Text('List All Categories'),
             ),
             const SizedBox(height: 20),
@@ -43,7 +49,6 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
                 // Navigate to list all areas screen
                 // Replace the following line with your navigation logic
-                print('Navigate to list all areas');
               },
               child: const Text('List All Areas'),
             ),
@@ -52,7 +57,6 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
                 // Navigate to list all main ingredients screen
                 // Replace the following line with your navigation logic
-                print('Navigate to list all main ingredients');
               },
               child: const Text('List All Main Ingredients'),
             ),
