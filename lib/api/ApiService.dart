@@ -30,7 +30,33 @@ class MealApi {
       // Catch any exception and return an empty list
       return [];
     }
-  }/*
+  }
+  Future<List<Meal>> fetchMealsForCategory(String category) async {
+    try {
+       final String apiUrl = "www.themealdb.com/api/json/v1/1/filter.php?c=$category";
+      final response = await _dio.get(apiUrl);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = response.data;
+        print(response.data);
+        // Check if the 'meals' key is present in the response
+        if (data.containsKey('meals') && data['meals'] != null) {
+          final List<dynamic> mealsJson = data['meals'];
+          return mealsJson.map((mealJson) => Meal.fromJson(mealJson)).toList();
+        } else {
+          // No meals for this letter, return an empty list
+          return [];
+        }
+      } else {
+        throw Exception('Failed to load meals for letter $category');
+      }
+    } catch (e) {
+      // Catch any exception and return an empty list
+      return [];
+    }
+  }
+
+  /*
   Future<List<CategoryModel>> fetchCategories() async {
     try {
       const String apiUrl ="www.themealdb.com/api/json/v1/1/categories.php";

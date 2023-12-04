@@ -33,8 +33,34 @@ class HomeScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                      onPressed: () {
-                        Get.to(const MealListScreen());
+                      onPressed: () async {
+                        if (fetchingController.isFetching.value) {
+                          return; // Do nothing if already fetching
+                        }
+
+                        try {
+                          fetchingController.isFetching.value =
+                              true; // Set fetching state to true
+                          List<Meal> meals = await mealApi.fetchMeals();
+
+                          if (meals.isNotEmpty) {
+                            Get.to(
+                              () => MealListScreen(
+                                list: meals,
+                              ),
+                            );
+                          } else {
+                            Get.snackbar(
+                              'Error',
+                              'Failed to fetch a random meal. Please try again.',
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white,
+                            );
+                          }
+                        } finally {
+                          fetchingController.isFetching.value =
+                              false; // Set fetching state to false regardless of success or failure
+                        }
                       },
                       child: const Text('All Meals'),
                     ),

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mealsapp/Screens/MealsScreen.dart';
 import 'package:mealsapp/models/CategoryModel.dart';
+import 'package:mealsapp/models/MealModel.dart';
 import '../api/ApiService.dart';
 
 class CategoryListScreen extends StatefulWidget {
@@ -29,31 +32,49 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
               itemCount: widget.categories.length,
               itemBuilder: (context, index) {
                 CategoryModel category = widget.categories[index];
-                return Card(
-                  elevation: 2, // Adjust the elevation as needed
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: ListTile(
-                    title: Text(
-                      category.strCategory,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
+                return Column(
+                  children: [
+                    Card(
+                      elevation: 2, // Adjust the elevation as needed
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      child: ListTile(
+                        title: Text(
+                          category.strCategory,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        /*subtitle: Text(
+                          category.strCategoryDescription,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),*/
+                        leading: CircleAvatar(
+                          radius: 30,
+                          backgroundColor:
+                              Colors.teal, // You can adjust the color
+                          backgroundImage: NetworkImage(
+                            category.strCategoryThumb,
+                          ),
+                        ),
+                        onTap: () async {
+                          List<Meal> meals = await mealApi.fetchMealsForCategory(category.strCategory);
+                          Get.to(
+                            () => MealListScreen(
+                              list: meals,
+                            ),
+                          );
+                        },
                       ),
                     ),
-                    subtitle: Text(
-                      category.strCategoryDescription,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
+                    const SizedBox(
+                      height: 10,
                     ),
-                    leading: CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Colors.teal, // You can adjust the color
-                      backgroundImage: NetworkImage(category.strCategoryThumb),
-                    ),
-                    onTap: (){},
-                  ),
+                  ],
                 );
               },
             ),
