@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mealsapp/Screens/AreasScreen.dart';
 import 'package:mealsapp/Screens/CategoriesScreen.dart';
 import 'package:mealsapp/Screens/MealsScreen.dart';
 import 'package:mealsapp/api/ApiService.dart';
@@ -88,16 +89,38 @@ class HomeScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
-                      onPressed: () {
-                        // Navigate to list all areas screen
-                        // Replace the following line with your navigation logic
+                      onPressed: () async {
+                        if (fetchingController.isFetching.value) {
+                          return; // Do nothing if already fetching
+                        }
+
+                        try {
+                          fetchingController.isFetching.value =
+                              true; // Set fetching state to true
+                          List<String> areas = await mealApi.fetchAreas();
+
+                          if (areas.isNotEmpty) {
+                            // Handle the areas data as needed, you can navigate to a new screen or display them in a dialog
+                            print('Areas: $areas');
+                            Get.to(() => AreasScreen(areas: areas));
+                          } else {
+                            Get.snackbar(
+                              'Error',
+                              'Failed to fetch areas. Please try again.',
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white,
+                            );
+                          }
+                        } finally {
+                          fetchingController.isFetching.value =
+                              false; // Set fetching state to false regardless of success or failure
+                        }
                       },
                       child: const Text('List All Areas'),
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
-
                         // Navigate to list all main ingredients screen
                         // Replace the following line with your navigation logic
                       },

@@ -56,6 +56,31 @@ class MealApi {
       return [];
     }
   }
+  Future<List<Meal>> fetchMealsForArea(String area) async {
+    try {
+      final String apiUrl = "https://www.themealdb.com/api/json/v1/1/filter.php?a=$area";
+      print(apiUrl);
+       final response = await _dio.get(apiUrl);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = response.data;
+        // Check if the 'meals' key is present in the response
+        if (data.containsKey('meals') && data['meals'] != null) {
+          final List<dynamic> mealsJson = data['meals'];
+          return mealsJson.map((mealJson) => Meal.fromJson(mealJson)).toList();
+        } else {
+          // No meals for this letter, return an empty list
+          return [];
+        }
+      } else {
+        throw Exception('Failed to load meals for letter $area');
+      }
+    } catch (e) {
+      // Catch any exception and return an empty list
+      print(e.toString());
+      print("A&A");
+      return [];
+    }
+  }
 
   Future<List<Meal>> fetchMeals() async {
     List<Meal> allMeals = [];
@@ -124,6 +149,27 @@ class MealApi {
     }
   }
 
+  Future<List<String>> fetchAreas() async {
+    try {
+      const String apiUrl = 'https://www.themealdb.com/api/json/v1/1/list.php?a=list';
+      final response = await _dio.get(apiUrl);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = response.data;
+
+        if (data.containsKey('meals') && data['meals'] != null) {
+          final List<dynamic> areasJson = data['meals'];
+          return areasJson.map<String>((areaJson) => areaJson['strArea']).toList();
+        } else {
+          return [];
+        }
+      } else {
+        throw Exception('Failed to load areas');
+      }
+    } catch (e) {
+      return [];
+    }
+  }
 
   Future<List<CategoryModel>> fetchCategories() async {
     try {
