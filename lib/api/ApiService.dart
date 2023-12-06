@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../models/MealModel.dart';
 import '../models/CategoryModel.dart';
@@ -34,7 +35,9 @@ class MealApi {
   Future<List<Meal>> fetchMealsForCategory(String category) async {
     try {
       final String apiUrl = "https://www.themealdb.com/api/json/v1/1/filter.php?c=$category";
-      print(apiUrl);
+      if (kDebugMode) {
+        print(apiUrl);
+      }
        final response = await _dio.get(apiUrl);
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = response.data;
@@ -51,15 +54,21 @@ class MealApi {
       }
     } catch (e) {
       // Catch any exception and return an empty list
-      print(e.toString());
-      print("A&A");
+      if (kDebugMode) {
+        print(e.toString());
+      }
+      if (kDebugMode) {
+        print("A&A");
+      }
       return [];
     }
   }
   Future<List<Meal>> fetchMealsForArea(String area) async {
     try {
       final String apiUrl = "https://www.themealdb.com/api/json/v1/1/filter.php?a=$area";
-      print(apiUrl);
+      if (kDebugMode) {
+        print(apiUrl);
+      }
        final response = await _dio.get(apiUrl);
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = response.data;
@@ -76,8 +85,12 @@ class MealApi {
       }
     } catch (e) {
       // Catch any exception and return an empty list
-      print(e.toString());
-      print("A&A");
+      if (kDebugMode) {
+        print(e.toString());
+      }
+      if (kDebugMode) {
+        print("A&A");
+      }
       return [];
     }
   }

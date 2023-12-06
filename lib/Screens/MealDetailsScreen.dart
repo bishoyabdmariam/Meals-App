@@ -154,28 +154,28 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                           onPressed: () {
                             _showIngredientsDialog(context);
                           },
-                          child: Text('Show Ingredients'),
+                          child: const Text('Show Ingredients'),
                         ),
                         const SizedBox(width: 10.0),
                         ElevatedButton(
                           onPressed: () {
                             _showInstructionsDialog(context);
                           },
-                          child: Text('Show Instructions'),
+                          child: const Text('Show Instructions'),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Text(
                     'Number of ${widget.meal.strMeal ?? ''} in the cart: ${cartController.cartItems[widget.meal] ?? 0}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16.0,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   Container(
@@ -201,7 +201,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Ingredients'),
+          title: const Text('Ingredients'),
           content: SingleChildScrollView(
             child: ListBody(
               children: getIngredients()
@@ -214,7 +214,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Close'),
+              child: const Text('Close'),
             ),
           ],
         );
@@ -227,7 +227,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Instructions'),
+          title: const Text('Instructions'),
           content: SingleChildScrollView(
             child: Text(widget.meal.strInstructions ?? ''),
           ),
@@ -236,7 +236,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Close'),
+              child: const Text('Close'),
             ),
           ],
         );
@@ -245,7 +245,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
   }
 
   void _onCartPressed() {
-    Get.to(() => CartScreen());
+    Get.to(() => const CartScreen());
   }
 
 /*

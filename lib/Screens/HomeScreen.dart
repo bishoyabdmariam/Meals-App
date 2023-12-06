@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mealsapp/Screens/AreasScreen.dart';
@@ -101,7 +102,9 @@ class HomeScreen extends StatelessWidget {
 
                           if (areas.isNotEmpty) {
                             // Handle the areas data as needed, you can navigate to a new screen or display them in a dialog
-                            print('Areas: $areas');
+                            if (kDebugMode) {
+                              print('Areas: $areas');
+                            }
                             Get.to(() => AreasScreen(areas: areas));
                           } else {
                             Get.snackbar(
