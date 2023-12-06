@@ -54,13 +54,13 @@ class Meal {
   String? dateModified;
 
   Meal({
-    this.idMeal,
-    this.strMeal,
+    required this.idMeal,
+    required this.strMeal,
     this.strDrinkAlternate,
     this.strCategory,
     this.strArea,
     this.strInstructions,
-    this.strMealThumb,
+    required this.strMealThumb,
     this.strTags,
     this.strYoutube,
     this.strIngredient1,

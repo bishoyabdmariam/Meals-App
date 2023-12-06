@@ -33,12 +33,11 @@ class MealApi {
   }
   Future<List<Meal>> fetchMealsForCategory(String category) async {
     try {
-       final String apiUrl = "www.themealdb.com/api/json/v1/1/filter.php?c=$category";
-      final response = await _dio.get(apiUrl);
-
+      final String apiUrl = "https://www.themealdb.com/api/json/v1/1/filter.php?c=$category";
+      print(apiUrl);
+       final response = await _dio.get(apiUrl);
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = response.data;
-        print(response.data);
         // Check if the 'meals' key is present in the response
         if (data.containsKey('meals') && data['meals'] != null) {
           final List<dynamic> mealsJson = data['meals'];
@@ -52,36 +51,11 @@ class MealApi {
       }
     } catch (e) {
       // Catch any exception and return an empty list
+      print(e.toString());
+      print("A&A");
       return [];
     }
   }
-
-  /*
-  Future<List<CategoryModel>> fetchCategories() async {
-    try {
-      const String apiUrl ="www.themealdb.com/api/json/v1/1/categories.php";
-      final response = await _dio.get(apiUrl);
-
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = response.data;
-
-        // Check if the 'meals' key is present in the response
-        if (data.containsKey('meals') && data['meals'] != null) {
-          final List<CategoryModel> mealsJson = data['meals'];
-
-          return mealsJson.map((mealJson) => Ca.fromJson(mealJson)).toList();
-        } else {
-          // No meals for this letter, return an empty list
-          return [];
-        }
-      } else {
-      }
-    } catch (e) {
-      // Catch any exception and return an empty list
-      print('Error fetching $e');
-      return [];
-    }
-  }*/
 
   Future<List<Meal>> fetchMeals() async {
     List<Meal> allMeals = [];

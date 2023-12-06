@@ -62,12 +62,15 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                           ),
                         ),
                         onTap: () async {
+                          print("A&A");
+                          print(category.strCategory);
                           List<Meal> meals = await mealApi.fetchMealsForCategory(category.strCategory);
                           Get.to(
                             () => MealListScreen(
                               list: meals,
                             ),
                           );
+                          print(meals);
                         },
                       ),
                     ),
