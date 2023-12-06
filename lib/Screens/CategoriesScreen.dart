@@ -36,7 +36,7 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
         () {
           if (fetchingController.isFetching.value ||
               widget.categories.isEmpty) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           } else {

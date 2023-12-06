@@ -97,6 +97,7 @@ class HomeScreen extends StatelessWidget {
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
+
                         // Navigate to list all main ingredients screen
                         // Replace the following line with your navigation logic
                       },
