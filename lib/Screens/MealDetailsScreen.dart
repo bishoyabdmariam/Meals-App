@@ -2,6 +2,7 @@ import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../constants/countryCodes.dart';
 import '../controller/AddToCartController.dart';
 import '../models/MealModel.dart';
 import 'CartScreen.dart';
@@ -128,7 +129,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                         width: 30,
                         height: 30,
                         child: CountryFlag.fromCountryCode(
-                          widget.meal.strArea!.substring(0, 2),
+                           areasMap[widget.meal.strArea!]??''
                         ),
                       ),
                     ],

@@ -1,6 +1,7 @@
 import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:mealsapp/api/ApiService.dart';
+import 'package:mealsapp/constants/countryCodes.dart';
 import 'package:mealsapp/controller/FetchingController.dart';
 import 'package:get/get.dart';
 
@@ -45,7 +46,7 @@ class AreasScreen extends StatelessWidget {
                         width: 30,
                         height: 30,
                         child: CountryFlag.fromCountryCode(
-                          area.substring(0, 2),
+                          areasMap[area]??''
                         ),
                       ),
                       title: Text(
