@@ -97,6 +97,34 @@ class MealApi {
       return null;
     }
   }
+
+  Future<Meal?> fetchMealById(String id) async {
+    try {
+      final String apiUrl =
+          'https://www.themealdb.com/api/json/v1/1/lookup.php?i=$id';
+      final response = await _dio.get(apiUrl);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = response.data;
+
+        // Check if the 'meals' key is present in the response
+        if (data.containsKey('meals') && data['meals'] != null) {
+          final List<dynamic> mealsJson = data['meals'];
+          // Since it's a random meal, we expect only one meal in the list
+          if (mealsJson.isNotEmpty) {
+            return Meal.fromJson(mealsJson.first);
+          }
+        }
+      }
+
+      return null;
+    } catch (e) {
+      // Catch any exception and return null
+      return null;
+    }
+  }
+
+
   Future<List<CategoryModel>> fetchCategories() async {
     try {
       const String apiUrl = 'https://www.themealdb.com/api/json/v1/1/categories.php';

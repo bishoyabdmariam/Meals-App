@@ -5,9 +5,13 @@ import 'CartScreen.dart';
 import 'MealListView.dart';
 
 class MealListScreen extends StatefulWidget {
-  const MealListScreen({super.key ,required this.list});
+  const MealListScreen({
+    super.key,
+    required this.list,
+  });
 
-final List<Meal> list;
+  final List<Meal> list;
+
   @override
   _MealListScreenState createState() => _MealListScreenState();
 }
@@ -40,12 +44,10 @@ class _MealListScreenState extends State<MealListScreen> {
         ],
       ),
       body: Center(
-        child:
-               MealListView(meals: widget.list)
-
+        child: MealListView(
+          meals: widget.list,
+        ),
       ),
-
-
     );
   }
 }

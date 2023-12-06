@@ -10,7 +10,6 @@ class MealListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    meals.shuffle();
     return ListView.builder(
       itemCount: meals.length,
       itemBuilder: (context, index) {

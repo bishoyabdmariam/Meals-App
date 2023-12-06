@@ -4,9 +4,13 @@ import 'package:mealsapp/Screens/MealsScreen.dart';
 import 'package:mealsapp/models/CategoryModel.dart';
 import 'package:mealsapp/models/MealModel.dart';
 import '../api/ApiService.dart';
+import '../controller/FetchingController.dart';
 
 class CategoryListScreen extends StatefulWidget {
-  const CategoryListScreen({super.key, required this.categories});
+  const CategoryListScreen({
+    super.key,
+    required this.categories,
+  });
 
   final List<CategoryModel> categories;
 
@@ -15,8 +19,12 @@ class CategoryListScreen extends StatefulWidget {
 }
 
 class _CategoryListScreenState extends State<CategoryListScreen> {
-  final MealApi mealApi = MealApi(); // Initialize your MealApi
+  final MealApi mealApi = MealApi();
+  final FetchingController fetchingController = Get.find<FetchingController>();
 
+  // Initialize your MealApi
+
+  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,18 +32,22 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
         title: const Text("Categories"),
         centerTitle: true,
       ),
-      body: widget.categories.isEmpty
-          ? const Center(
+      body: Obx(
+        () {
+          if (fetchingController.isFetching.value ||
+              widget.categories.isEmpty) {
+            return Center(
               child: CircularProgressIndicator(),
-            )
-          : ListView.builder(
+            );
+          } else {
+            return ListView.builder(
               itemCount: widget.categories.length,
               itemBuilder: (context, index) {
                 CategoryModel category = widget.categories[index];
                 return Column(
                   children: [
                     Card(
-                      elevation: 2, // Adjust the elevation as needed
+                      elevation: 2,
                       margin: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 8),
                       child: ListTile(
@@ -46,31 +58,27 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                             fontSize: 18,
                           ),
                         ),
-                        /*subtitle: Text(
-                          category.strCategoryDescription,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
-                          ),
-                        ),*/
                         leading: CircleAvatar(
                           radius: 30,
-                          backgroundColor:
-                              Colors.teal, // You can adjust the color
+                          backgroundColor: Colors.teal,
                           backgroundImage: NetworkImage(
                             category.strCategoryThumb,
                           ),
                         ),
                         onTap: () async {
-                          print("A&A");
-                          print(category.strCategory);
-                          List<Meal> meals = await mealApi.fetchMealsForCategory(category.strCategory);
+                          fetchingController.isFetching.value = true;
+                          List<Meal> meals = await mealApi
+                              .fetchMealsForCategory(category.strCategory);
+                          for (int i = 0; i < meals.length; i++) {
+                            meals[i] = (await mealApi
+                                .fetchMealById(meals[i].idMeal!))!;
+                          }
                           Get.to(
                             () => MealListScreen(
                               list: meals,
                             ),
                           );
-                          print(meals);
+                          fetchingController.isFetching.value = false;
                         },
                       ),
                     ),
@@ -80,7 +88,10 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                   ],
                 );
               },
-            ),
+            );
+          }
+        },
+      ),
     );
   }
 }

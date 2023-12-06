@@ -9,7 +9,10 @@ import 'CartScreen.dart';
 class MealDetailsScreen extends StatefulWidget {
   final Meal meal;
 
-  const MealDetailsScreen({Key? key, required this.meal}) : super(key: key);
+  const MealDetailsScreen({
+    Key? key,
+    required this.meal,
+  }) : super(key: key);
 
   @override
   State<MealDetailsScreen> createState() => _MealDetailsScreenState();
