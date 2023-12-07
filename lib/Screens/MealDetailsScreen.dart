@@ -1,7 +1,9 @@
 import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import '../constants/countryCodes.dart';
 import '../controller/AddToCartController.dart';
 import '../models/MealModel.dart';
@@ -22,6 +24,7 @@ class MealDetailsScreen extends StatefulWidget {
 class _MealDetailsScreenState extends State<MealDetailsScreen> {
   late CartController cartController;
   bool isAdded = false;
+  late YoutubePlayerController _controller; // Declare the controller
 
   List<String> getIngredients() {
     final List<String> ingredients = [];
@@ -32,6 +35,21 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
       }
     }
     return ingredients;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the controller in initState
+    _controller = YoutubePlayerController(
+      initialVideoId: YoutubePlayer.convertUrlToId(widget.meal.strYoutube ?? '')!,
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+        enableCaption: true,
+        showLiveFullscreenButton: false,
+      ),
+    );
   }
 
   @override
@@ -129,7 +147,7 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                         width: 30,
                         height: 30,
                         child: CountryFlag.fromCountryCode(
-                           areasMap[widget.meal.strArea!]??''
+                          areasMap[widget.meal.strArea!] ?? '',
                         ),
                       ),
                     ],
@@ -139,17 +157,6 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
-                        const SizedBox(width: 10.0),
-                        ElevatedButton(
-                          onPressed: widget.meal.strYoutube == null
-                              ? null
-                              : () async {
-                                  await launchUrl(Uri.parse(
-                                    widget.meal.strYoutube!,
-                                  ));
-                                },
-                          child: const Text('Watch Video'),
-                        ),
                         const SizedBox(width: 10.0),
                         ElevatedButton(
                           onPressed: () {
@@ -167,6 +174,40 @@ class _MealDetailsScreenState extends State<MealDetailsScreen> {
                       ],
                     ),
                   ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  AspectRatio(
+                    aspectRatio: 16/9,
+                    child: YoutubePlayerBuilder(
+                      onEnterFullScreen: () {
+                        // Handle entering full-screen mode
+                        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [] );
+                      },
+                      onExitFullScreen: () {
+                        // Handle exiting full-screen mode
+                        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+                      },
+                      player: YoutubePlayer(
+                        controller: _controller,
+                      ),
+                      builder: (context, player) {
+                        return Column(
+                          children: [
+                            player,
+                            const SizedBox(height: 10.0),
+                            ElevatedButton(
+                              onPressed: () {
+                                launchUrl(Uri.parse(widget.meal.strYoutube??""));
+                              },
+                              child: const Text('Go Youtube'),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+
                   const SizedBox(
                     height: 20,
                   ),

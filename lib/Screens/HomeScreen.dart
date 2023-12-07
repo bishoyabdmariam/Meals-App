@@ -22,7 +22,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Meal Explorer'),
+        title: const Text('Meals'),
         centerTitle: true,
       ),
       body: Obx(
@@ -32,15 +32,21 @@ class HomeScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircularProgressIndicator(),
-                    SizedBox(height: 16),
+                    SizedBox(
+                      height: 16,
+                    ),
                     AnimatedDefaultTextStyle(
-                      duration: Duration(milliseconds: 300),
+                      duration: Duration(
+                        milliseconds: 300,
+                      ),
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: Colors.blue,
                       ),
-                      child: Text('Loading...'),
+                      child: Text(
+                        'Loading...',
+                      ),
                     ),
                   ],
                 ),
@@ -114,7 +120,7 @@ class HomeScreen extends StatelessWidget {
                         children: [
                           _buildGridItem(
                             image: "assets/images/allmeals.jfif",
-                            label: 'All Meals',
+                            label: 'Our Meals',
                             onPressed: () async {
                               await _fetchAndNavigate(() async {
                                 List<Meal> meals = await mealApi.fetchMeals();
@@ -136,7 +142,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                           _buildGridItem(
                             image: "assets/images/world.png",
-                            label: 'List All Areas',
+                            label: 'Areas We Support',
                             onPressed: () async {
                               await _fetchAndNavigate(() async {
                                 List<String> areas = await mealApi.fetchAreas();
@@ -150,7 +156,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                           _buildGridItem(
                             image: "assets/images/random meals.jfif",
-                            label: 'Pick a Random Meal',
+                            label: 'Random Meal',
                             onPressed: () async {
                               await _fetchAndNavigate(() async {
                                 Meal? randomMeal =
@@ -208,7 +214,7 @@ class HomeScreen extends StatelessWidget {
                   child: Text(
                     label,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16.0),
+                    style: const TextStyle(fontSize: 16.0),
                   ),
                 ),
               ],
@@ -231,7 +237,7 @@ class HomeScreen extends StatelessWidget {
       await fetchFunction();
     } finally {
       // Move setting isFetching to false after navigation
-      Future.delayed(const Duration(seconds: 30), () {
+      Future.delayed(const Duration(seconds: 2), () {
         fetchingController.isFetching.value = false;
       });
     }

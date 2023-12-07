@@ -28,7 +28,7 @@ class _MealListScreenState extends State<MealListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Meals"),
+        title: const Text("Our Meals"),
         centerTitle: true,
         actions: [
           IconButton(
