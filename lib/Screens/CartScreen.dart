@@ -15,7 +15,8 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(/*
+    return Scaffold(
+      /*
       floatingActionButton: ElevatedButton(
         onPressed: (){},
         child: const Text("Process to CheckOut"),
@@ -26,49 +27,51 @@ class _CartScreenState extends State<CartScreen> {
       ),
       body: cartController.cartItems.isEmpty
           ? const Center(
-        child: Text("There is no meals in the Cart, try adding some."),
-      )
+              child: Text("There is no meals in the Cart, try adding some."),
+            )
           : ListView.builder(
-        itemCount: cartController.cartItems.length,
-        itemBuilder: (context, index) {
-          final Meal cartItem = cartController.cartItems.keys.toList()[index];
-          final int quantity = cartController.cartItems[cartItem]!;
+              itemCount: cartController.cartItems.length,
+              itemBuilder: (context, index) {
+                final Meal cartItem =
+                    cartController.cartItems.keys.toList()[index];
+                final int quantity = cartController.cartItems[cartItem]!;
 
-          return Card(
-            margin: const EdgeInsets.all(8.0),
-            elevation: 4.0,
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(cartItem.strMealThumb ?? ''),
-              ),
-              title: Text(cartItem.strMeal ?? ''),
-              subtitle: Text('Category: ${cartItem.strCategory ?? ''}'),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.remove),
-                    onPressed: () {
-                      // Decrease quantity
-                      cartController.removeFromCart(cartItem);
-                      setState(() {});
-                    },
+                return Card(
+                  margin: const EdgeInsets.all(8.0),
+                  elevation: 4.0,
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage:
+                          NetworkImage(cartItem.strMealThumb ?? ''),
+                    ),
+                    title: Text(cartItem.strMeal ?? ''),
+                    subtitle: Text('Category: ${cartItem.strCategory ?? ''}'),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.remove),
+                          onPressed: () {
+                            // Decrease quantity
+                            cartController.removeFromCart(cartItem);
+                            setState(() {});
+                          },
+                        ),
+                        Text('$quantity'),
+                        IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () {
+                            // Increase quantity
+                            cartController.addToCart(cartItem);
+                            setState(() {});
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                  Text('$quantity'),
-                  IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: () {
-                      // Increase quantity
-                      cartController.addToCart(cartItem);
-                      setState(() {});
-                    },
-                  ),
-                ],
-              ),
+                );
+              },
             ),
-          );
-        },
-      ),
     );
   }
 }
