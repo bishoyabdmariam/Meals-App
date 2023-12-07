@@ -15,11 +15,11 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(/*
       floatingActionButton: ElevatedButton(
         onPressed: (){},
         child: const Text("Process to CheckOut"),
-      ),
+      ),*/
       appBar: AppBar(
         title: const Text('My Cart'),
         centerTitle: true,
